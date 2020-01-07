@@ -1,0 +1,2 @@
+# Workaround for pypi2nix issue #380
+flit < 2.0

@@ -1,0 +1,6 @@
+requests
+ipython
+mypy
+pytest
+atlassian-python-api
+-c constraints.txt
