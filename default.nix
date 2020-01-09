@@ -23,6 +23,7 @@ let
     ];
     propagatedBuildInputs = with appPython.packages; [
       atlassian-python-api
+      click
     ];
   };
 

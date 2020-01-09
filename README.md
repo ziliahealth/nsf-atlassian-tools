@@ -17,18 +17,19 @@ Building and running
 ```bash
 $ nix build -f release.nix
 # ..
-$ ./result/bin/nixos-sf-bitbucket-user-authorize-ssh-key --help
-usage: nixos-sf-bitbucket-user-authorize-ssh-key [-h] --username USERNAME
-                                                 --password PASSWORD
-                                                 --ssh-key-label SSH_KEY_LABEL
-                                                 --ssh-key SSH_KEY
+$ ./result/bin/nixos-sf-bitbucket --help
+Usage: nixos-sf-bitbucket [OPTIONS] COMMAND [ARGS]...
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --username USERNAME
-  --password PASSWORD
-  --ssh-key-label SSH_KEY_LABEL
-  --ssh-key SSH_KEY
+  Click cli app entry point.
+
+Options:
+  -v, --verbose
+  --username TEXT
+  --password TEXT
+  --help           Show this message and exit.
+
+Commands:
+  user  Cli app `user` sub command group.
 ```
 
 
@@ -40,19 +41,8 @@ $ cd /this/directory
 # ..
 $ nix-shell
 # ..
-$ nixos-sf-bitbucket-user-authorize-ssh-key --help
+$ nixos-sf-bitbucket --help
 # .. (same as above)
-usage: nixos-sf-bitbucket-user-authorize-ssh-key [-h] --username USERNAME
-                                                 --password PASSWORD
-                                                 --ssh-key-label SSH_KEY_LABEL
-                                                 --ssh-key SSH_KEY
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --username USERNAME
-  --password PASSWORD
-  --ssh-key-label SSH_KEY_LABEL
-  --ssh-key SSH_KEY
 ```
 
 

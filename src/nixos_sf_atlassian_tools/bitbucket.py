@@ -3,13 +3,17 @@ from atlassian.rest_client import AtlassianRestAPI
 import argparse
 import logging
 import itertools
+import click
 from dataclasses import dataclass
-
-LOGGER = logging.getLogger(__name__)
 
 
 class BitbucketRestAPIError(Exception):
     pass
+
+
+class BitbucketRestAPISshKeyDoesNotExistsError(BitbucketRestAPIError):
+    pass
+
 
 @dataclass(frozen=True)
 class SshKeyEntry:
@@ -18,7 +22,22 @@ class SshKeyEntry:
     key: str
 
 
-class BitbucketRestAPI:
+@dataclass
+class BitbucketRestAPIClientBuilder:
+    """Builder for the bitbucket rest api client."""
+
+    username: str
+    password: str
+    url: Optional[str] = None
+
+    def build_client(self):
+        """Build method for the client."""
+        return BitbucketRestAPIClient(self.username, self.password, self.url)
+
+
+class BitbucketRestAPIClient:
+    """Bitbucket rest api client specialized for this application's needs."""
+
     def __init__(
             self,
             username: str,
@@ -26,6 +45,7 @@ class BitbucketRestAPI:
             url: Optional[str] = None,
             **kwargs
     ) -> None:
+        """Cstor."""
         default_url = "https://api.bitbucket.org/"
         if url is None:
             url = default_url
@@ -114,13 +134,17 @@ class BitbucketRestAPI:
         response = self._client.post(url, data=data)
         return self._process_ssh_user_key_changed_response(response)
 
-
     def put_ssh_user_key(
             self, label: str, key: str, key_uuid: Optional[str] = None
     ) -> SshKeyEntry:
         if key_uuid is None:
             key_info = self.get_ssh_user_key_from_label(label)
-            assert key_info is not None
+            try:
+                assert key_info is not None
+            except AssertionError as e:
+                raise BitbucketRestAPISshKeyDoesNotExistsError(
+                    "Ssh key for label '{}' does not exists.".format(
+                        label)) from e
             key_uuid = key_info.uuid
 
         data = {
@@ -143,44 +167,34 @@ class BitbucketRestAPI:
         else:
             return self.put_ssh_user_key(label, key, key_uuid=existing_key.uuid)
 
+    @classmethod
+    def _process_ssh_user_key_removed_response(
+            cls, response: Optional[Dict[str, Any]]
+    ) -> None:
+        if response is None:
+            return  # Successful removal.
 
+        if response["type"] == "error":
+            msg = response["error"]["message"]
+            raise BitbucketRestAPIError(msg)
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--username', action="store", type=str, required=True)
-    parser.add_argument('--password', action="store", type=str, required=True)
-    parser.add_argument('--ssh-key-label', action="store",
-                        type=str, required=True)
-    parser.add_argument('--ssh-key', action="store", type=str, required=True)
-    parser.add_argument('-v', '--verbose', action='count', default=0)
+    def delete_ssh_user_key(
+            self, label: str, key_uuid: Optional[str] = None
+    ) -> SshKeyEntry:
+        if key_uuid is None:
+            key_info = self.get_ssh_user_key_from_label(label)
+            try:
+                assert key_info is not None
+            except AssertionError as e:
+                raise BitbucketRestAPISshKeyDoesNotExistsError(
+                    "Ssh key for label '{}' does not exists.".format(
+                        label)) from e
+            key_uuid = key_info.uuid
 
-    args = parser.parse_args()
-
-    key_label = args.ssh_key_label
-    key = args.ssh_key
-    username = args.username
-    password = args.password
-    verbosity_lvl = args.verbose
-
-    verbosity_mapping = {
-        0: logging.WARNING,
-        1: logging.INFO,
-        2: logging.DEBUG,
-    }
-    logging.basicConfig(
-        level=verbosity_mapping.get(verbosity_lvl, logging.DEBUG))
-
-    client = BitbucketRestAPI(
-        username=username,
-        password=password
-    )
-
-    key_entry = client.set_ssh_user_key(key_label, key)
-    LOGGER.info(
-        "Added / updated ssh key to '%s' user account."
-        "{key_label: %s, key_uuid: %s}",
-        username, key_entry.label, key_entry.uuid)
-
-
-if __name__ == "__main__":
-    main()
+        url = "2.0/users/{}/ssh-keys/{}".format(self._user_uuid, key_uuid)
+        response = self._client.delete(url, data={})
+        self._process_ssh_user_key_removed_response(response)
+        return SshKeyEntry(
+            label=label,
+            uuid=key_uuid,
+            key="")
