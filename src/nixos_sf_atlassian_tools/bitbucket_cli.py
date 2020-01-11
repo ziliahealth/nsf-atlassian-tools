@@ -71,9 +71,7 @@ def setup_shared_cmd_options(
 
 
 @click.group()
-# @click.pass_context
 def cli(
-        # ctx: click.Context,
 ) -> None:
     """A Bitbucket restapi client."""
     pass
@@ -96,9 +94,7 @@ def ssh():
 @click.option(
     '--label',
     help="Filter results by ssh key label.")
-# @click.pass_obj
 def ls(
-        # obj: CliContext,
         verbose: int,
         username: str,
         password: str,
@@ -119,9 +115,7 @@ def ls(
 @click.option(
     '--label', required=True,
     help="A unique label for this ssh key.")
-@click.pass_obj
 def authorize(
-        # obj: CliContext,
         verbose: int,
         username: str,
         password: str,
@@ -155,9 +149,7 @@ def authorize(
 @click.option(
     '--label', required=True,
     help="The label of the ssh key to be deauthorized.")
-@click.pass_obj
 def deauthorize(
-        # obj: CliContext,
         verbose: int,
         username: str,
         password: str,
