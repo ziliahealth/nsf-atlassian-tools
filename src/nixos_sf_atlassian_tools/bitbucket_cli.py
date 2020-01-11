@@ -113,7 +113,8 @@ def ls(
 
 
 @ssh.command()
-@click.argument('key', default=None, required=False)
+@click.argument(
+    'key', default=None, required=False)
 @shared_cmd_options
 @click.option(
     '--label', required=True,
@@ -127,7 +128,11 @@ def authorize(
         label: str,
         key: str
 ) -> None:
-    """Authorize ssh key to the specified user account."""
+    """Authorize ssh key to the specified user account.
+
+    Ssh public key to be authorized to the Bitbucket account can be either
+    passed as a positional argument 'KEY' or via stdin.
+    """
     obj = setup_shared_cmd_options(verbose, username, password)
     client_builder = obj.client_builder
     username = obj.username
