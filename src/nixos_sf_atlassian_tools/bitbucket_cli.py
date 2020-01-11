@@ -1,4 +1,4 @@
-"""Command line interface to interact with the bitbucket rest api."""
+"""Command line interface to interact with the Bitbucket rest api."""
 from typing import Optional
 import logging
 import click
@@ -19,22 +19,8 @@ class CliContext:
     username: str
 
 
-@click.group()
-@click.option('-v', '--verbose', default=0, count=True)
-@click.option(
-    '--username', envvar='NIXOS_SF_BITBUCKET_USERNAME',
-    prompt=True)
-@click.option(
-    '--password', envvar='NIXOS_SF_BITBUCKET_PW',
-    prompt=True, hide_input=True)
-@click.pass_context
-def cli(
-        ctx: click.Context,
-        verbose: int,
-        username: str,
-        password: str
-) -> None:
-    """Click cli app entry point."""
+def setup_verbose(
+        verbose: int) -> None:
     verbosity_mapping = {
         0: logging.WARNING,
         1: logging.INFO,
@@ -44,36 +30,82 @@ def cli(
     logging.basicConfig(
         level=verbosity_mapping.get(verbose, logging.DEBUG))
 
+
+def composed(*decs):
+    def deco(f):
+        for dec in reversed(decs):
+            f = dec(f)
+        return f
+    return deco
+
+
+def shared_cmd_options(func):
+    return composed(
+        click.option(
+            '-v', '--verbose', default=0, count=True,
+            help="Verbosity level."),
+        click.option(
+            '--username', envvar='NIXOS_SF_BITBUCKET_USERNAME',
+            prompt=True,
+            help="Username of the Bitbucket account this tool will operate on."),
+        click.option(
+            '--password', envvar='NIXOS_SF_BITBUCKET_PW',
+            prompt=True, hide_input=True,
+            help="Password of the Bitbucket account this tool will operate on.")
+    )(func)
+
+
+def setup_shared_cmd_options(
+        verbose: int,
+        username: str,
+        password: str
+) -> CliContext:
+    setup_verbose(verbose)
     client_builder = BitbucketRestAPIClientBuilder(
         username=username,
         password=password
     )
-
-    ctx.obj = CliContext(
+    return CliContext(
         client_builder=client_builder,
         username=username)
 
 
+@click.group()
+# @click.pass_context
+def cli(
+        # ctx: click.Context,
+) -> None:
+    """A Bitbucket restapi client."""
+    pass
+
+
 @cli.group()
 def user():
-    """Cli app `user` sub command group."""
+    """Bitbucket user related commands."""
     pass
 
 
 @user.group()
 def ssh():
-    """Cli app `user ssh` sub command group."""
+    """Commands for managing a Bitbucket user's authorized ssh keys."""
     pass
 
 
 @ssh.command()
-@click.option('--label')
-@click.pass_obj
+@shared_cmd_options
+@click.option(
+    '--label',
+    help="Filter results by ssh key label.")
+# @click.pass_obj
 def ls(
-        obj: CliContext,
+        # obj: CliContext,
+        verbose: int,
+        username: str,
+        password: str,
         label: Optional[str]
 ) -> None:
-    """Cli app `user ssh ls` sub command."""
+    """List ssh key authorized to the specified user account."""
+    obj = setup_shared_cmd_options(verbose, username, password)
     client_builder = obj.client_builder
     client = client_builder.build_client()
     for v in client.get_ssh_user_keys(label):
@@ -82,14 +114,21 @@ def ls(
 
 @ssh.command()
 @click.argument('key', default=None, required=False)
-@click.option('--label', required=True)
+@shared_cmd_options
+@click.option(
+    '--label', required=True,
+    help="A unique label for this ssh key.")
 @click.pass_obj
 def authorize(
-        obj: CliContext,
-        label,
-        key
+        # obj: CliContext,
+        verbose: int,
+        username: str,
+        password: str,
+        label: str,
+        key: str
 ) -> None:
-    """Cli app `user ssh authorize` sub command."""
+    """Authorize ssh key to the specified user account."""
+    obj = setup_shared_cmd_options(verbose, username, password)
     client_builder = obj.client_builder
     username = obj.username
 
@@ -107,13 +146,20 @@ def authorize(
 
 
 @ssh.command()
-@click.option('--label', required=True)
+@shared_cmd_options
+@click.option(
+    '--label', required=True,
+    help="The label of the ssh key to be deauthorized.")
 @click.pass_obj
 def deauthorize(
-        obj: CliContext,
-        label
+        # obj: CliContext,
+        verbose: int,
+        username: str,
+        password: str,
+        label: str
 ) -> None:
-    """Cli app `user ssh deauthorize` sub command."""
+    """Deauthorize ssh key from the specified user account."""
+    obj = setup_shared_cmd_options(verbose, username, password)
     client_builder = obj.client_builder
     username = obj.username
 
