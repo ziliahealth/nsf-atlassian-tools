@@ -25,6 +25,8 @@ let
       atlassian-python-api
       click
     ];
+
+    # dontUseSetuptoolsShellHook = true;
   };
 
 in

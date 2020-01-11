@@ -1,4 +1,4 @@
-{ nixpkgs ? import ../../../pinned/nixpkgs.nix {} }:
+{ nixpkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
 
 nixpkgs.callPackage ./. {
   inherit nixpkgs;
