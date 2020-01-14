@@ -20,16 +20,29 @@ $ nix build -f release.nix
 $ ./result/bin/nixos-sf-bitbucket --help
 Usage: nixos-sf-bitbucket [OPTIONS] COMMAND [ARGS]...
 
-  Click cli app entry point.
+  A Bitbucket restapi client.
 
 Options:
-  -v, --verbose
-  --username TEXT
-  --password TEXT
-  --help           Show this message and exit.
+  --help  Show this message and exit.
 
 Commands:
-  user  Cli app `user` sub command group.
+  user  Bitbucket user related commands.
+```
+
+
+Entering a user environment
+---------------------------
+
+This is an environment that simulates the conditions occurring when this
+application is installed on a system. For example it allows one to test packaged
+shell completions (bash / zsh / etc).
+
+```bash
+$ nix-shell env.nix
+# ..
+$ nixos-sf-bitbucket --help
+# .. (same as above)
+$ nixos-sf-bitbucket [Hit Tab Here]
 ```
 
 
