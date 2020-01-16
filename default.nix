@@ -28,8 +28,6 @@ let
       click
     ];
 
-    # dontUseSetuptoolsShellHook = true;
-
     postInstall = ''
       click_exes=( "nixos-sf-bitbucket" )
 
@@ -45,6 +43,13 @@ let
         # Because of the above, check that we got some completion code in the file.
         cat "$bash_completion_dir/$e" | grep "$e" > /dev/null
       done
+    '';
+
+    # Allow nix-shell inside nix-shell.
+    # See `pkgs/development/interpreters/python/hooks/setuptools-build-hook.sh`
+    # for the reason why.
+    shellHook = ''
+      setuptoolsShellHook
     '';
   };
 
