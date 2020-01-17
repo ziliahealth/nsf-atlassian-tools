@@ -1,7 +1,7 @@
 { nixpkgs, fromNixShell ? false }:
 
 let
-  lib = nixpkgs.lib;
+  inherit (nixpkgs) lib nix-gitignore;
   appPythonOverrides = {pkgs, python}: self: super: {
   };
 
@@ -14,7 +14,7 @@ let
     pname = "nixos-sf-atlassian-tools";
     version = "0.0.0";
     name = "${pname}-${version}";
-    src = ./.;
+    src = nix-gitignore.gitignoreSourcePure ./.gitignore ./.;
     buildInputs = [];
     checkInputs =  with appPython.packages; [
       mypy
