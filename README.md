@@ -120,4 +120,10 @@ Todo
 See [Todo](./TODO.md) file.
 
 
+Contributing
+------------
+
+Contributing implies licensing those contributions under the terms of [LICENSE](./LICENSE), which is an *Apache 2.0* license.
+
+
 [nixos-secure-factory]: https://github.com/jraygauthier/nixos-secure-factory
