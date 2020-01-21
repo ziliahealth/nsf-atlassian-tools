@@ -6,6 +6,8 @@ release = import ./release.nix {
   inherit nixpkgs;
 };
 
+inherit (nixpkgs) bash-completion;
+
 in
 
 nixpkgs.mkShell {
@@ -22,5 +24,11 @@ nixpkgs.mkShell {
       fi
     done
     export XDG_DATA_DIRS
+
+    # Make sure we support the pure case as well as non nixos cases
+    # where dynamic bash completions were not sourced.
+    if ! type _completion_loader > /dev/null; then
+      . ${bash-completion}/etc/profile.d/bash_completion.sh
+    fi
   '';
 }
