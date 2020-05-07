@@ -1,12 +1,12 @@
-{ nixpkgs, fromNixShell ? false }:
+{ pkgs, fromNixShell ? false }:
 
 let
-  inherit (nixpkgs) lib nix-gitignore;
+  inherit (pkgs) lib nix-gitignore;
   appPythonOverrides = {pkgs, python}: self: super: {
   };
 
   appPython = import ./requirements.nix {
-    pkgs = nixpkgs;
+    inherit pkgs;
     overrides = appPythonOverrides;
   };
 
@@ -56,5 +56,5 @@ let
 in
 
 app
-# nixpkgs.python3Packages.toPythonApplication app
+# pkgs.python3Packages.toPythonApplication app
 # appPython.packages.toPythonApplication app

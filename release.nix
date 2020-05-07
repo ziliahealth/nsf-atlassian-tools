@@ -1,3 +1,5 @@
-{ nixpkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
+{ pkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
 
-nixpkgs.callPackage ./. { inherit nixpkgs; }
+{
+  default = pkgs.callPackage ./. { inherit pkgs; };
+}

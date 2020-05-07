@@ -59,7 +59,7 @@ Building and running
 --------------------
 
 ```bash
-$ nix build -f release.nix
+$ nix build -f release.nix default
 # ..
 $ ./result/bin/nixos-sf-bitbucket --help
 Usage: nixos-sf-bitbucket [OPTIONS] COMMAND [ARGS]...

@@ -1,17 +1,18 @@
-{ nixpkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
+{ pkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
 
 let
 
-release = import ./release.nix {
-  inherit nixpkgs;
-};
+default = (import
+  ./release.nix {
+    inherit pkgs;
+  }).default;
 
-inherit (nixpkgs) bash-completion;
+inherit (pkgs) bash-completion;
 
 in
 
-nixpkgs.mkShell {
-  buildInputs = [ release ];
+pkgs.mkShell {
+  buildInputs = [ default ];
 
   shellHook = ''
     # Bring xdg data dirs of dependencies and current program into the
