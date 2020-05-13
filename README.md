@@ -127,3 +127,12 @@ Contributing implies licensing those contributions under the terms of [LICENSE](
 
 
 [nixos-secure-factory]: https://github.com/jraygauthier/nixos-secure-factory
+
+
+Acknowledgements
+----------------
+
+Thanks to [Zilia Health] for being the first innovative corporate user /
+supporter of this project allowing it to grow both in quality and features.
+
+[Zilia Health]: https://ziliahealth.com/
