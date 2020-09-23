@@ -45,11 +45,11 @@ def shared_cmd_options(func):
             '-v', '--verbose', default=0, count=True,
             help="Verbosity level."),
         click.option(
-            '--username', envvar='NIXOS_SF_BITBUCKET_USERNAME',
+            '--username', envvar='NSF_BITBUCKET_USERNAME',
             prompt=True,
             help="Username of the Bitbucket account this tool will operate on."),
         click.option(
-            '--password', envvar='NIXOS_SF_BITBUCKET_PW',
+            '--password', envvar='NSF_BITBUCKET_PW',
             prompt=True, hide_input=True,
             help="Password of the Bitbucket account this tool will operate on.")
     )(func)
