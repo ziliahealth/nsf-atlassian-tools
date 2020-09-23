@@ -12,16 +12,16 @@ Features
 
     ```bash
     $ ssh_key="$(cat /path/to/my/ssh-key.pub)"
-    $ nixos-sf-bitbucket user ssh authorize -v --label my-ssh-key-label "$ssh_key"
+    $ nsf-bitbucket user ssh authorize -v --label my-ssh-key-label "$ssh_key"
     Username: my-user-name@gmail.com
     Password:
-    INFO:nixos_sf_atlassian_tools.bitbucket_cli:Authorized ssh key 'my-ssh-key-label' to ' my-user-name@gmail.com' user account.`{key_uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}}`
+    INFO:nsf_atlassian_tools.bitbucket_cli:Authorized ssh key 'my-ssh-key-label' to ' my-user-name@gmail.com' user account.`{key_uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}}`
     ```
 
  -  Listing ssh keys authorized to the user account:
 
     ```bash
-    $ nixos-sf-bitbucket user ssh ls -v
+    $ nsf-bitbucket user ssh ls -v
     Username: my-user-name@gmail.com
     Password:
     label: my-ssh-key-label, uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}
@@ -32,7 +32,7 @@ Features
  -  Listing ssh keys filtered by label:
 
     ```bash
-    $ nixos-sf-bitbucket user ssh ls -v --label my-ssh-key
+    $ nsf-bitbucket user ssh ls -v --label my-ssh-key
     Username: my-user-name@gmail.com
     Password:
     label: my-ssh-key-label, uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}
@@ -41,10 +41,10 @@ Features
  -  Deauthorizing a ssh key from the user account:
 
     ```bash
-    $ nixos-sf-bitbucket user ssh deauthorize -v --label my-ssh-key-label
+    $ nsf-bitbucket user ssh deauthorize -v --label my-ssh-key-label
     Username: jraygauthier@gmail.com
     Password:
-    INFO:nixos_sf_atlassian_tools.bitbucket_cli:Deauthorized ssh key 'my-ssh-key-label' from 'my-user-name@gmail.com' user account.`{key_uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}}`
+    INFO:nsf_atlassian_tools.bitbucket_cli:Deauthorized ssh key 'my-ssh-key-label' from 'my-user-name@gmail.com' user account.`{key_uuid: {6088bce9-75ec-4e36-8c05-973cea379cff}}`
     ```
 
 
@@ -61,8 +61,8 @@ Building and running
 ```bash
 $ nix build -f release.nix default
 # ..
-$ ./result/bin/nixos-sf-bitbucket --help
-Usage: nixos-sf-bitbucket [OPTIONS] COMMAND [ARGS]...
+$ ./result/bin/nsf-bitbucket --help
+Usage: nsf-bitbucket [OPTIONS] COMMAND [ARGS]...
 
   A Bitbucket restapi client.
 
@@ -84,9 +84,9 @@ shell completions (bash / zsh / etc).
 ```bash
 $ nix-shell env.nix
 # ..
-$ nixos-sf-bitbucket --help
+$ nsf-bitbucket --help
 # .. (same as above)
-$ nixos-sf-bitbucket [Hit Tab Here]
+$ nsf-bitbucket [Hit Tab Here]
 ```
 
 
@@ -98,7 +98,7 @@ $ cd /this/directory
 # ..
 $ nix-shell
 # ..
-$ nixos-sf-bitbucket --help
+$ nsf-bitbucket --help
 # .. (same as above)
 ```
 

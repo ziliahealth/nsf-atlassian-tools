@@ -11,7 +11,7 @@ let
   };
 
   app = appPython.mkDerivation rec {
-    pname = "nixos-sf-atlassian-tools";
+    pname = "nsf-atlassian-tools";
     version = "0.0.0";
     name = "${pname}-${version}";
     src = nix-gitignore.gitignoreSourcePure ./.gitignore ./.;
@@ -29,7 +29,7 @@ let
     ];
 
     postInstall = ''
-      click_exes=( "nixos-sf-bitbucket" )
+      click_exes=( "nsf-bitbucket" )
 
       # Install click application bash completions.
       bash_completion_dir="$out/share/bash-completion/completions"
