@@ -12,7 +12,7 @@ let
 
   app = appPython.mkDerivation rec {
     pname = "nsf-atlassian-tools";
-    version = "0.0.0";
+    version = "0.1.0";
     name = "${pname}-${version}";
     src = nix-gitignore.gitignoreSourcePure ./.gitignore ./.;
     buildInputs = [];
