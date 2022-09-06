@@ -1,6 +1,5 @@
-{ pkgs ? import ./.nix/pinned-nixpkgs.nix {} }:
+{ pkgs ? import ./.nix/pinned-nixpkgs.nix { } }:
 
-pkgs.callPackage ./. {
+import ./release.nix {
   inherit pkgs;
-  fromNixShell = true;
 }

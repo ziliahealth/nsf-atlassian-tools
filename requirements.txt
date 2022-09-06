@@ -1,7 +1,0 @@
-requests
-ipython
-mypy
-pytest
-atlassian-python-api
-click
--c constraints.txt
